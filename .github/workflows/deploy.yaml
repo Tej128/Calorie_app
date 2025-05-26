@@ -39,7 +39,17 @@ jobs:
       run: |
         kubectl apply -f k8s-manifests/
 
-    - name: Verify Deployment
+    - name: Verify Deployment Rollout
       run: |
         kubectl get pods
         kubectl get svc
+        kubectl rollout status deployment/calorie-api --namespace=default
+
+    - name: Wait for Prometheus to be Ready
+      run: |
+        kubectl rollout status deployment/prometheus -n monitoring
+
+    - name: Confirm Prometheus targets are UP
+      run: |
+        PROM_SVC=$(kubectl get svc prometheus -n monitoring -o jsonpath="{.spec.clusterIP}")
+        curl -s http://$PROM_SVC:9090/api/v1/targets | grep '"health":"up"' || (echo "❌ Prometheus is not collecting metrics" && exit 1)
