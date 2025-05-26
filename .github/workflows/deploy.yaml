@@ -48,8 +48,13 @@ jobs:
     - name: Wait for Prometheus to be Ready
       run: |
         kubectl rollout status deployment/prometheus -n monitoring
-
+    
+    - name: Port forward Prometheus
+      run: |
+        kubectl port-forward svc/prometheus 9090:9090 -n monitoring &
+        sleep 10
+    
     - name: Confirm Prometheus targets are UP
       run: |
-        PROM_SVC=$(kubectl get svc prometheus -n monitoring -o jsonpath="{.spec.clusterIP}")
-        curl -s http://$PROM_SVC:9090/api/v1/targets | grep '"health":"up"' || (echo "❌ Prometheus is not collecting metrics" && exit 1)
+        echo "Checking if Prometheus has any targets UP..."
+        curl -s http://localhost:9090/api/v1/targets | grep '"health":"up"' && echo "Prometheus is collecting metrics." || (echo "Prometheus has no healthy targets!" && exit 1)
