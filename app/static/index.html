@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calorie Calculator</title>
+</head>
+<body>
+    <h1>Maintenance Calorie Calculator</h1>
+
+    <form id="calcForm">
+        Age: <input type="number" id="age" required><br>
+        Weight (kg): <input type="number" id="weight" required><br>
+        Height (cm): <input type="number" id="height" required><br>
+        Gender:
+        <select id="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select><br>
+        <button type="submit">Calculate</button>
+    </form>
+
+    <h2>Results</h2>
+    <pre id="results"></pre>
+
+    <script>
+        document.getElementById("calcForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const data = {
+                age: document.getElementById("age").value,
+                weight: document.getElementById("weight").value,
+                height: document.getElementById("height").value,
+                gender: document.getElementById("gender").value
+            };
+
+            fetch("/api/calculate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(json => {
+                document.getElementById("results").textContent = JSON.stringify(json, null, 2);
+            })
+            .catch(err => {
+                document.getElementById("results").textContent = "Error: " + err;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,34 +1,38 @@
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    result = None
-    if request.method == "POST":
-        age = int(request.form["age"])
-        weight = float(request.form["weight"])
-        height = float(request.form["height"])
-        gender = request.form["gender"]
+@app.route("/api/calculate", methods=["POST"])
+def calculate():
+    data = request.get_json()
 
-        if gender == "male":
-            s = 5
-        else:
-            s = -161
+    try:
+        age = int(data["age"])
+        weight = float(data["weight"])
+        height = float(data["height"])
+        gender = data["gender"].lower()
 
+        s = 5 if gender == "male" else -161
         bmr = (10 * weight) + (6.25 * height) - (5 * age) + s
         maintenance = bmr * 1.2
         deficit = maintenance * 0.8
         surplus = maintenance * 1.2
 
-        result = {
+        return jsonify({
             "bmr": round(bmr, 2),
             "maintenance": round(maintenance, 2),
             "deficit": round(deficit, 2),
             "surplus": round(surplus, 2)
-        }
+        })
 
-    return render_template("index.html", result=result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route("/", methods=["GET"])
+def root():
+    return send_from_directory("static", "index.html")
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

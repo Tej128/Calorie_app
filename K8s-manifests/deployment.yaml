@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: calorie-app
+  name: calorie-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: calorie-app
+      app: calorie-api
   template:
     metadata:
       labels:
-        app: calorie-app
+        app: calorie-api
     spec:
       containers:
-      - name: calorie-app
-        image: dharmateja12/calorie-app:latest
+      - name: calorie-api
+        image: dharmateja12/calorie-api:latest
         ports:
         - containerPort: 5000
