@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: calorie-api
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -13,7 +14,7 @@ spec:
         app: calorie-api
     spec:
       containers:
-      - name: calorie-api
-        image: dharmateja12/calorie-api:latest
-        ports:
-        - containerPort: 5000
+        - name: calorie-api
+          image: dharmateja12/calorie-api:latest
+          ports:
+            - containerPort: 5000
