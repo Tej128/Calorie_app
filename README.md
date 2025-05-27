@@ -87,7 +87,7 @@ Implemented via GitHub Actions:
   ```bash
   kubectl port-forward svc/prometheus 9090 -n monitoring
   kubectl port-forward svc/grafana 3000 -n monitoring/
-
+```
 5. Access Flask app via LoadBalancer URL (kubectl get svc)
 
 6. Use monitor.sh and prometheus_query.py for manual automation
