@@ -39,7 +39,7 @@ Implemented via GitHub Actions:
   4. Rollout verified
   5. Prometheus queried to ensure metric ingestion
 
-**Workflow File:** `.github/workflows/deploy.yml`
+**Workflow File:** `.github/workflows/deploy.yaml`
 
 
 ---
